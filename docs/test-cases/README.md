@@ -45,5 +45,5 @@ Manual test cases for VotoRadar, derived from the [test plan](../test-plan.md).
 | Navigation | 2 | 1 | 2 | 5 |
 | Votes | 6 | 2 | 2 | 10 |
 | Deputies | 7 | 2 | 0 | 9 |
-| API | 4 | 3 | 1 | 8 |
-| **Total** | **19** | **8** | **5** | **32** |
+| API | 5 | 3 | 2 | 10 |
+| **Total** | **20** | **8** | **6** | **34** |

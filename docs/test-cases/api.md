@@ -6,7 +6,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F10 | R02 | High | Contract | Planned |
+| F10 | R02 | High | Contract | Automated |
 
 **Preconditions**
 - None
@@ -25,7 +25,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F05, F10 | R01 | High | Data consistency | Planned |
+| F05, F10 | R01 | High | Data consistency | Automated |
 
 **Preconditions**
 - None
@@ -45,7 +45,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F02, F10 | R02 | High | Functional | Planned |
+| F02, F10 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - None
@@ -62,7 +62,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F03, F10 | R04 | Medium | Functional | Planned |
+| F03, F10 | R04 | Medium | Functional | Automated |
 
 **Preconditions**
 - None
@@ -83,7 +83,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F10 | — | Medium | Negative | Planned |
+| F10 | — | Medium | Negative | Automated |
 
 **Preconditions**
 - None
@@ -91,11 +91,14 @@ Base URL: `https://votoradar.y4tress.com/api`
 **Steps**
 1. Send `GET /votacoes?ano=abc&pagina=0`.
 2. Send `GET /votacoes?ano=2026&pagina=-1`.
+3. Send `GET /votacoes?pagina=0` (no year).
 
 **Expected result**
-- Both requests return `400`.
+- All requests return `400`.
 - The error message describes the invalid parameter.
 - The response does not expose internal implementation details (e.g. raw exception messages).
+
+> **Known bug:** step 1 returns the raw Java exception message `For input string: "abc"`. The automated check is marked with `test.fail()` until the bug is fixed.
 
 ---
 
@@ -103,7 +106,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06, F10 | R02 | High | Functional | Planned |
+| F06, F10 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - None
@@ -124,7 +127,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06, F10 | — | Low | Contract | Planned |
+| F06, F10 | — | Low | Contract | Automated |
 
 **Preconditions**
 - None
@@ -143,7 +146,7 @@ Base URL: `https://votoradar.y4tress.com/api`
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06, F10 | R01 | Medium | Functional | Planned |
+| F06, F10 | R01 | Medium | Functional | Automated |
 
 **Preconditions**
 - A valid deputy ID is obtained from `GET /deputados?ano=2026&pagina=0`.
@@ -153,5 +156,46 @@ Base URL: `https://votoradar.y4tress.com/api`
 2. Send the same request with an ID that does not exist (e.g. `0`).
 
 **Expected result**
-- Step 1: status `200` with a paginated list of votes from 2026.
+- Step 1: status `200` with a paginated list of votes from 2026; each item has a `voto` of `aFavor`, `contra`, `abstencoes` or `nenhum`.
 - Step 2: status `404`, or `200` with an empty list. Never `500`.
+
+---
+
+### TC-API-009 — Deputy voting history matches the vote lists
+
+| Feature | Risk | Priority | Type | Automation |
+|---|---|---|---|---|
+| F05, F06, F10 | R01 | High | Data consistency | Automated |
+
+**Preconditions**
+- A deputy with votes in the current year (e.g. Erika Hilton, ID `220645`).
+
+**Steps**
+1. Fetch the deputy's complete history: `GET /deputados/{id}/votacoes?ano=2026` (all pages).
+2. Fetch all votes of the year: `GET /votacoes?ano=2026` (all pages).
+3. For each history item with `voto` other than `nenhum`, find the vote with the same `id`.
+
+**Expected result**
+- Every history item exists in the votes list.
+- The deputy is listed in the vote's list that matches their option (`aFavor`, `contra` or `abstencoes`).
+
+---
+
+### TC-API-010 — Name search ignores case and accents
+
+| Feature | Risk | Priority | Type | Automation |
+|---|---|---|---|---|
+| F06, F10 | — | Low | Usability | Automated |
+
+**Preconditions**
+- None
+
+**Steps**
+1. Send `GET /deputados?ano=2026&pagina=0&nome=` with `Erika`, `erika` and `ERIKA`.
+2. Send the same request with `Sâmia` and `Samia`.
+
+**Expected result**
+- Step 1: all three searches return the same total.
+- Step 2: both searches return the same total (users often type without accents on mobile keyboards).
+
+> **Known issue:** the search is accent-sensitive, so `Samia` returns no results. The automated check is marked with `test.fail()`.
