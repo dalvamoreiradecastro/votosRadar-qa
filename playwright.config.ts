@@ -1,10 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
+import { env } from './config/environment';
 
-/**
- * Target environment URL.
- * Defaults to production; override with the BASE_URL environment variable.
- */
-const BASE_URL = process.env.BASE_URL ?? 'https://votoradar.y4tress.com';
+console.log(`Running tests against "${env.name}": UI ${env.baseURL} | API ${env.apiURL}`);
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -17,14 +14,14 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   /* Retry on CI only, to surface flaky tests without hiding them locally */
   retries: process.env.CI ? 2 : 0,
-  /* Limit parallelism on CI to be gentle with a production environment */
-  workers: process.env.CI ? 2 : undefined,
+  /* Production sits behind a rate limiter (10 req/s per IP): keep parallelism low there */
+  workers: env.isProduction ? 2 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
   /* Live production API can take a few seconds to respond under parallel load */
   expect: { timeout: 10_000 },
 
   use: {
-    baseURL: BASE_URL,
+    baseURL: env.baseURL,
     /* Evidence is collected only when something goes wrong */
     trace: 'on-first-retry',
     screenshot: 'only-on-failure',
@@ -32,10 +29,11 @@ export default defineConfig({
   },
 
   projects: [
-    /* API tests: no browser needed */
+    /* API tests: no browser needed, requests go straight to the backend */
     {
       name: 'api',
       testDir: './tests/api',
+      use: { baseURL: env.apiURL },
     },
 
     /* End-to-end UI tests: desktop browsers */

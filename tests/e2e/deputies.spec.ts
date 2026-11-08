@@ -1,4 +1,5 @@
 import { test, expect } from '../fixtures/pages';
+import { env } from '../../config/environment';
 
 const CURRENT_YEAR = new Date().getFullYear();
 
@@ -58,7 +59,8 @@ test.describe('Deputies explorer', () => {
       expect(deputy.party, deputy.name).toBe('PSOL');
     }
 
-    const parties = await (await page.request.get(`/api/deputados/partidos?ano=${CURRENT_YEAR}`)).json();
+    // The API may live on a different host than the UI (e.g. locally), so use the configured API URL
+    const parties = await (await page.request.get(`${env.apiURL}/api/deputados/partidos?ano=${CURRENT_YEAR}`)).json();
     await expect(deputiesPage.partyFilter.locator('option')).toHaveText(['Todos', ...parties]);
   });
 
