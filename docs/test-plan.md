@@ -15,13 +15,22 @@ This plan defines what will be tested, how, and which risks drive prioritization
 
 ## 2. Application overview
 
-- **Type:** Single Page Application (content rendered client-side via JavaScript)
+- **Type:** Single Page Application built with Expo (React Native for Web); content is rendered client-side
+- **Routing:** navigation and filters do not change the URL (no deep links)
 - **Authentication:** none, all content is public
 - **Main areas:**
   - **Chamber › Votes:** year filter (2016–2026), lazily loaded list of votes, details panel (date, ID, status, summary, bills voted, vote results)
   - **Chamber › Deputies:** list of deputies and their votes
   - **Senate:** placeholder, no data yet
   - **Global:** sidebar menu, light/dark theme toggle, system status indicator
+- **Backend API** (consumed by the frontend):
+
+  | Endpoint | Purpose |
+  |---|---|
+  | `GET /api/votacoes?ano={year}&pagina={page}` | Paginated votes for a year, including totals and the list of deputies per vote option |
+  | `GET /api/deputados?ano={year}&pagina={page}` | Paginated list of deputies |
+  | `GET /api/deputados/partidos?ano={year}` | List of parties |
+
 - **Data source:** voting data appears to come from the Chamber of Deputies Open Data API (`dadosabertos.camara.leg.br`), which serves as the test oracle for data accuracy checks.
 
 ## 3. Scope
@@ -110,7 +119,7 @@ Bugs are reported as GitHub Issues containing: title, environment, steps to repr
 
 ## 10. Assumptions and open questions
 
-- [ ] Are filter selections reflected in the URL (shareable links)?
-- [ ] Which filters are available on the Deputies view?
+- [x] Are filter selections reflected in the URL (shareable links)? **No**, navigation and filters keep the URL at `/`.
+- [ ] Which filters are available on the Deputies view? (Initial exploration: name search plus two dropdowns, likely party and state.)
 - [ ] Are there votes with outcomes other than approved/rejected?
 - [ ] Agree date, time and volume for the performance scenario with the site owner
