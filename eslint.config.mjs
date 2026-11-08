@@ -35,6 +35,8 @@ export default tseslint.config(
       'playwright/no-wait-for-timeout': 'error',
       // Committed test.only would silently skip the rest of the suite
       'playwright/no-focused-test': 'error',
+      // Conditional skips (e.g. desktop-only behavior) are intentional
+      'playwright/no-skipped-test': ['warn', { allowConditional: true }],
     },
   },
 );

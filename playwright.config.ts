@@ -20,6 +20,8 @@ export default defineConfig({
   /* Limit parallelism on CI to be gentle with a production environment */
   workers: process.env.CI ? 2 : undefined,
   reporter: [['list'], ['html', { open: 'never' }]],
+  /* Live production API can take a few seconds to respond under parallel load */
+  expect: { timeout: 10_000 },
 
   use: {
     baseURL: BASE_URL,
