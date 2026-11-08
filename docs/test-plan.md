@@ -30,6 +30,7 @@ This plan defines what will be tested, how, and which risks drive prioritization
   | `GET /api/votacoes?ano={year}&pagina={page}` | Paginated votes for a year, including totals and the list of deputies per vote option |
   | `GET /api/deputados?ano={year}&pagina={page}` | Paginated list of deputies |
   | `GET /api/deputados/partidos?ano={year}` | List of parties |
+  | `GET /api/deputados/{id}/votacoes?ano={year}&pagina={page}` | Voting history of a deputy |
 
 - **Data source:** voting data appears to come from the Chamber of Deputies Open Data API (`dadosabertos.camara.leg.br`), which serves as the test oracle for data accuracy checks.
 
@@ -120,6 +121,6 @@ Bugs are reported as GitHub Issues containing: title, environment, steps to repr
 ## 10. Assumptions and open questions
 
 - [x] Are filter selections reflected in the URL (shareable links)? **No**, navigation and filters keep the URL at `/`.
-- [ ] Which filters are available on the Deputies view? (Initial exploration: name search plus two dropdowns, likely party and state.)
+- [x] Which filters are available on the Deputies view? **Year, name (applied on Enter), party and state.** A selected deputy's history can be filtered by vote option and year.
 - [ ] Are there votes with outcomes other than approved/rejected?
 - [ ] Agree date, time and volume for the performance scenario with the site owner
