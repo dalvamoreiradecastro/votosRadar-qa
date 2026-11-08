@@ -1,5 +1,7 @@
 # VotoRadar QA
 
+[![Tests](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/tests.yml/badge.svg)](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/tests.yml)
+
 Test automation portfolio for [VotoRadar](https://votoradar.y4tress.com), a portal that shows how Brazilian federal deputies voted on legislative proposals.
 
 > 🚧 Work in progress
@@ -50,3 +52,12 @@ npm run test:local    # TEST_ENV=local (start the app first with `docker compose
 ```
 
 `BASE_URL` and `API_URL` override the URLs of the selected environment, e.g. for a preview deployment. Configuration is validated on startup, so a typo such as `TEST_ENV=prodution` fails immediately with a clear message. See [.env.example](.env.example).
+
+## Continuous integration
+
+[.github/workflows/tests.yml](.github/workflows/tests.yml) runs on every push to `main`, on every pull request, and on demand:
+
+- **API tests** run in their own job for fast feedback.
+- **UI tests** run as a matrix: one parallel job per browser/device, each installing only the browser it needs.
+- Each job uploads a blob report; a final job merges them into a single **HTML report**, available as the `playwright-report` artifact of the run.
+- Failures are annotated directly on the pull request.
