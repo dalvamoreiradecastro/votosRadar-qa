@@ -16,7 +16,14 @@ export default defineConfig({
   retries: process.env.CI ? 2 : 0,
   /* Production sits behind a rate limiter (10 req/s per IP): keep parallelism low there */
   workers: env.isProduction ? 2 : undefined,
-  reporter: [['list'], ['html', { open: 'never' }]],
+  /*
+   * Locally: list output + HTML report.
+   * On CI: a "blob" per job (merged into a single HTML report afterwards)
+   * and GitHub annotations that point to the failing lines in the pull request.
+   */
+  reporter: process.env.CI
+    ? [['list'], ['blob', { fileName: `report-${process.env.BLOB_NAME ?? 'ci'}.zip` }], ['github']]
+    : [['list'], ['html', { open: 'never' }]],
   /* Live production API can take a few seconds to respond under parallel load */
   expect: { timeout: 10_000 },
 
