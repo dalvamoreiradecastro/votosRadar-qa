@@ -6,7 +6,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R02 | High | Functional | Planned |
+| F06 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -26,7 +26,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R02 | High | Functional | Planned |
+| F06 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -47,7 +47,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06, F07 | R07 | Medium | Functional | Planned |
+| F06, F07 | R07 | Medium | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -66,7 +66,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R02 | High | Functional | Planned |
+| F06 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -85,7 +85,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R02 | Medium | Functional | Planned |
+| F06 | R02 | Medium | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -103,7 +103,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R02 | High | Functional | Planned |
+| F06 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -124,7 +124,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R03 | High | Functional | Planned |
+| F06 | R03 | High | Functional | Automated |
 
 **Preconditions**
 - Deputies view is open.
@@ -144,7 +144,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F06 | R01 | High | Functional | Planned |
+| F06 | R01 | High | Functional | Automated |
 
 **Preconditions**
 - A deputy's voting history is displayed (TC-DEP-007).
@@ -164,7 +164,7 @@ All cases start from the Deputies view: open the home page and click "Deputados"
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F05, F06 | R01 | High | Data consistency | Planned |
+| F05, F06 | R01 | High | Data consistency | Automated |
 
 **Preconditions**
 - A deputy's voting history is displayed (TC-DEP-007).

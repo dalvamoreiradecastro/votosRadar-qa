@@ -4,7 +4,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F02, F03 | R02 | High | Functional | Planned |
+| F02, F03 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - None
@@ -23,7 +23,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F02 | R02 | High | Functional | Planned |
+| F02 | R02 | High | Functional | Automated |
 
 **Preconditions**
 - Home page is open.
@@ -42,7 +42,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F03 | R04 | Medium | Functional | Planned |
+| F03 | R04 | Medium | Functional | Automated |
 
 **Preconditions**
 - Home page is open.
@@ -61,7 +61,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F03 | R04 | Medium | Functional | Planned |
+| F03 | R04 | Medium | Functional | Automated |
 
 **Preconditions**
 - Home page is open with a year that has more than 20 votes.
@@ -81,7 +81,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F04 | R07 | Low | UI | Planned |
+| F04 | R07 | Low | UI | Automated |
 
 **Preconditions**
 - Home page is open on a desktop viewport.
@@ -98,7 +98,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F04 | R03 | High | Functional | Planned |
+| F04 | R03 | High | Functional | Automated |
 
 **Preconditions**
 - Home page is open on a desktop viewport.
@@ -118,7 +118,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F05 | R01 | High | Data consistency | Planned |
+| F05 | R01 | High | Data consistency | Automated |
 
 **Preconditions**
 - Home page is open.
@@ -137,7 +137,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F05 | R01 | High | Data consistency | Planned |
+| F05 | R01 | High | Data consistency | Automated |
 
 **Preconditions**
 - Home page is open.
@@ -155,7 +155,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F07 | R07 | Low | Functional | Planned (with mocked API) |
+| F07 | R07 | Low | Functional | Automated (mocked API) |
 
 **Preconditions**
 - `GET /api/votacoes` is mocked to return an empty list (`totalItens: 0`).
@@ -174,7 +174,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F07 | R05 | High | Error handling | Planned (with mocked API) |
+| F07 | R05 | High | Error handling | Automated (mocked API) |
 
 **Preconditions**
 - `GET /api/votacoes` is mocked to return HTTP 500.
@@ -186,3 +186,5 @@
 - A user-friendly error message is displayed in the votes list area.
 - The rest of the page (menu, year filter) remains usable.
 - No technical details (stack traces, exception messages) are shown.
+
+> **Known bug:** the page shows the raw message "500 Internal Server Error: Internal Server Error" together with a misleading "Nenhuma votação encontrada." empty state. The automated test is marked with `test.fail()` until the bug is fixed.

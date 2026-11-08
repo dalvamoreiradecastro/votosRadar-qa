@@ -4,7 +4,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F01 | — | High | Functional | Planned |
+| F01 | — | High | Functional | Automated |
 
 **Preconditions**
 - None
@@ -22,7 +22,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F01 | — | High | Functional | Planned |
+| F01 | — | High | Functional | Automated |
 
 **Preconditions**
 - Home page is open on a desktop viewport.
@@ -41,7 +41,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F01, F07 | R07 | Low | Functional | Planned |
+| F01, F07 | R07 | Low | Functional | Automated |
 
 **Preconditions**
 - Home page is open on a desktop viewport.
@@ -61,7 +61,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F08 | — | Low | UI | Planned |
+| F08 | — | Low | UI | Automated |
 
 **Preconditions**
 - Home page is open in light theme.
@@ -80,7 +80,7 @@
 
 | Feature | Risk | Priority | Type | Automation |
 |---|---|---|---|---|
-| F01, F09 | R06 | Medium | UI | Planned |
+| F01, F09 | R06 | Medium | UI | Automated |
 
 **Preconditions**
 - Home page is open on a mobile viewport (e.g. Pixel 7 or iPhone 14).
