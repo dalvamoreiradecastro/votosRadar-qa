@@ -1,6 +1,7 @@
 # VotoRadar QA
 
 [![Tests](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/tests.yml/badge.svg)](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/tests.yml)
+[![Lint](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/lint.yml/badge.svg)](https://github.com/dalvamoreiradecastro/votosRadar-qa/actions/workflows/lint.yml)
 
 Test automation portfolio for [VotoRadar](https://votoradar.y4tress.com), a portal that shows how Brazilian federal deputies voted on legislative proposals.
 
@@ -55,7 +56,16 @@ npm run test:local    # TEST_ENV=local (start the app first with `docker compose
 
 ## Continuous integration
 
-[.github/workflows/tests.yml](.github/workflows/tests.yml) runs on every push to `main`, on every pull request, and on demand:
+Two workflows run on every pull request and on every push to `main`:
+
+| Workflow | Checks | Duration |
+|---|---|---|
+| [lint.yml](.github/workflows/lint.yml) | ESLint (zero warnings allowed) and TypeScript type check | ~30 s |
+| [tests.yml](.github/workflows/tests.yml) | API tests and UI tests on 5 browsers/devices | ~10 min |
+
+`main` is protected by a branch ruleset: changes go through a pull request, and the **"ESLint and type check"** check must pass before merging. Broken or sloppy code is stopped in seconds, before anyone spends time reviewing it.
+
+The test workflow can also be started on demand:
 
 - **API tests** run in their own job for fast feedback.
 - **UI tests** run as a matrix: one parallel job per browser/device, each installing only the browser it needs.

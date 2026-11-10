@@ -1,0 +1,39 @@
+name: Lint
+
+# Static checks that gate pull requests. Kept separate from the test workflow:
+# they take seconds, need no browsers and give the fastest possible feedback.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lint-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    # This name is the status check required by the branch ruleset on main: keep them in sync
+    name: ESLint and type check
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: ESLint
+        # Warnings also fail the check, so they cannot pile up unnoticed
+        run: npm run lint -- --max-warnings=0
+
+      - name: Type check
+        run: npm run typecheck
