@@ -42,7 +42,9 @@ export class DeputiesPage {
     this.counter = this.screen.getByText(/^Deputados \(\d+ de \d+\)$/);
     this.votesPanel = this.screen.getByTestId('deputado-votes-panel');
     this.votesList = this.votesPanel.getByTestId('deputado-votes-list');
-    this.voteItems = this.votesList.getByTestId(/^deputado-votacao-/);
+    // Anchored to the vote id ("2635476-36"): child buttons share the prefix
+    // (deputado-votacao-details-*, deputado-votacao-proposicao-*) and must not match
+    this.voteItems = this.votesList.getByTestId(/^deputado-votacao-\d+-\d+$/);
   }
 
   /**
