@@ -22,10 +22,16 @@ const ENVIRONMENTS = {
 
 type EnvironmentName = keyof typeof ENVIRONMENTS;
 
+/**
+ * Treats an empty string as "not set". In GitHub Actions, `${{ vars.NAME }}` resolves to ""
+ * when the variable is not configured, and that must fall back to the environment defaults.
+ */
+const optionalUrl = z.preprocess((value) => (value === '' ? undefined : value), z.url().optional());
+
 const EnvSchema = z.object({
   TEST_ENV: z.enum(Object.keys(ENVIRONMENTS) as [EnvironmentName, ...EnvironmentName[]]).default('production'),
-  BASE_URL: z.url().optional(),
-  API_URL: z.url().optional(),
+  BASE_URL: optionalUrl,
+  API_URL: optionalUrl,
 });
 
 const parsed = EnvSchema.safeParse(process.env);

@@ -29,6 +29,12 @@ jobs:
     name: API tests
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    # Configuration (variables and secrets) comes from the matching GitHub Environment
+    environment: ${{ inputs.environment || 'production' }}
+    env:
+      # Optional overrides; when not configured they are empty and the code falls back to its defaults
+      BASE_URL: ${{ vars.BASE_URL }}
+      API_URL: ${{ vars.API_URL }}
     steps:
       - uses: actions/checkout@v5
 
@@ -57,6 +63,10 @@ jobs:
     name: UI tests (${{ matrix.project }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    environment: ${{ inputs.environment || 'production' }}
+    env:
+      BASE_URL: ${{ vars.BASE_URL }}
+      API_URL: ${{ vars.API_URL }}
     strategy:
       # Keep running the other browsers when one fails, to see the full picture
       fail-fast: false

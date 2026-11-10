@@ -61,3 +61,16 @@ npm run test:local    # TEST_ENV=local (start the app first with `docker compose
 - **UI tests** run as a matrix: one parallel job per browser/device, each installing only the browser it needs.
 - Each job uploads a blob report; a final job merges them into a single **HTML report**, available as the `playwright-report` artifact of the run.
 - Failures are annotated directly on the pull request.
+
+### Configuration, variables and secrets
+
+Test jobs run inside a [GitHub Environment](https://docs.github.com/en/actions/managing-workflow-runs-and-deployments/managing-deployments/managing-environments-for-deployment) named after the target (`production`), so each environment keeps its own configuration in **Settings → Environments**:
+
+| Name | Kind | Purpose |
+|---|---|---|
+| `BASE_URL` | Variable (optional) | Overrides the UI URL of the environment |
+| `API_URL` | Variable (optional) | Overrides the API URL of the environment |
+
+Nothing is hardcoded in the workflow, and when a variable is not set the defaults from [config/environment.ts](config/environment.ts) apply.
+
+URLs are public, so they are stored as **variables**, which stay readable in the logs. **Secrets** are reserved for sensitive values such as tokens or passwords: GitHub encrypts them, masks them as `***` in the logs, and does not expose them to workflows triggered from forks. The site under test is public and needs no credentials, so the project currently has no secrets. A future one (e.g. an API token) would be added to the same environment and read as `${{ secrets.NAME }}`, never committed to the repository; locally, the git-ignored `.env` file plays the same role.
