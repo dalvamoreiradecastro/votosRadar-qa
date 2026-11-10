@@ -65,7 +65,7 @@ Two workflows run on every pull request and on every push to `main`:
 
 `main` is protected by a branch ruleset: changes go through a pull request, and the **"ESLint and type check"** check must pass before merging. Broken or sloppy code is stopped in seconds, before anyone spends time reviewing it.
 
-The test workflow can also be started on demand:
+The test workflow can also be started on demand (**Actions → Tests → Run workflow**). How it is organized:
 
 - **API tests** run in their own job for fast feedback.
 - **UI tests** run as a matrix: one parallel job per browser/device, each installing only the browser it needs.
