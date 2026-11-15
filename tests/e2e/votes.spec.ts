@@ -1,7 +1,10 @@
 import { test, expect } from '../fixtures/pages';
 import type { VoteCard } from '../pages/VotesPage';
-
 import { CURRENT_YEAR, FIRST_YEAR, PREVIOUS_YEAR } from '../support/years';
+import { ENDPOINTS, isEndpoint } from '../../config/endpoints';
+
+/** Matches every request to the votes list, for mocking. */
+const votesList = (url: URL): boolean => isEndpoint(url, ENDPOINTS.votes);
 
 /** Extracts the "Sim"/"Não" counts from a vote description, if present. */
 function parseSummary(description: string): { yes: number; no: number } | null {
@@ -129,7 +132,7 @@ test.describe('Votes explorer', () => {
   });
 
   test('TC-VOT-009 year without votes shows an empty state', async ({ page, votesPage }) => {
-    await page.route('**/api/votacoes?**', (route) =>
+    await page.route(votesList, (route) =>
       route.fulfill({
         json: { itens: [], pagina: 0, tamanhoPagina: 10, totalItens: 0, temProximaPagina: false },
       }),
@@ -145,7 +148,7 @@ test.describe('Votes explorer', () => {
     // together with a misleading "Nenhuma votação encontrada." empty state.
     test.fail(true, 'Known bug: technical error message shown to the user');
 
-    await page.route('**/api/votacoes?**', (route) =>
+    await page.route(votesList, (route) =>
       route.fulfill({ status: 500, body: 'Internal Server Error' }),
     );
     await votesPage.goto();

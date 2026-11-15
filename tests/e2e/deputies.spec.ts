@@ -1,6 +1,6 @@
 import { test, expect } from '../fixtures/pages';
 import { env } from '../../config/environment';
-
+import { ENDPOINTS } from '../../config/endpoints';
 import { CURRENT_YEAR } from '../support/years';
 
 // Test data: a deputy in office during the current legislature
@@ -60,7 +60,8 @@ test.describe('Deputies explorer', () => {
     }
 
     // The API may live on a different host than the UI (e.g. locally), so use the configured API URL
-    const parties = await (await page.request.get(`${env.apiURL}/api/deputados/partidos?ano=${CURRENT_YEAR}`)).json();
+    const partiesUrl = new URL(ENDPOINTS.parties, env.apiURL).href;
+    const parties = await (await page.request.get(partiesUrl, { params: { ano: CURRENT_YEAR } })).json();
     await expect(deputiesPage.partyFilter.locator('option')).toHaveText(['Todos', ...parties]);
   });
 

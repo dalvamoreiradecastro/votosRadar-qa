@@ -1,4 +1,5 @@
 import type { Locator, Page, Response } from '@playwright/test';
+import { ENDPOINTS, isEndpoint } from '../../config/endpoints';
 import { BasePage } from './BasePage';
 
 export type VoteOption = 'all' | 'aFavor' | 'contra' | 'abstencoes' | 'nenhum';
@@ -8,8 +9,6 @@ export interface DeputyItem {
   party: string;
   state: string;
 }
-
-const DEPUTIES_API = /\/api\/deputados\?/;
 
 /** "Explorador de Deputados" screen. */
 export class DeputiesPage extends BasePage {
@@ -48,7 +47,7 @@ export class DeputiesPage extends BasePage {
    */
   private async waitForList(param: string, value: string | null, action: () => Promise<void>): Promise<Response> {
     const isExpected = (res: Response): boolean => {
-      if (!DEPUTIES_API.test(res.url())) return false;
+      if (!isEndpoint(res.url(), ENDPOINTS.deputies)) return false;
       const params = new URL(res.url()).searchParams;
       return params.get('pagina') === '0' && params.get(param) === value;
     };

@@ -1,5 +1,6 @@
 import type { APIRequestContext, APIResponse } from '@playwright/test';
 import type { Deputy, DeputyVote, Page, Vote } from './schemas';
+import { ENDPOINTS } from '../../../config/endpoints';
 
 export interface PageQuery {
   year: number;
@@ -21,12 +22,12 @@ export class VotoRadarApi {
   constructor(private readonly request: APIRequestContext) {}
 
   getVotes({ year, page = 0 }: PageQuery): Promise<APIResponse> {
-    return this.request.get('/api/votacoes', { params: { ano: year, pagina: page } });
+    return this.request.get(ENDPOINTS.votes, { params: { ano: year, pagina: page } });
   }
 
   /** Sends raw query parameters, for negative tests with invalid values. */
   getVotesRaw(params: Record<string, string>): Promise<APIResponse> {
-    return this.request.get('/api/votacoes', { params });
+    return this.request.get(ENDPOINTS.votes, { params });
   }
 
   getDeputies({ year, page = 0, name, party, state }: DeputiesQuery): Promise<APIResponse> {
@@ -34,15 +35,15 @@ export class VotoRadarApi {
     if (name) params.nome = name;
     if (party) params.partido = party;
     if (state) params.uf = state;
-    return this.request.get('/api/deputados', { params });
+    return this.request.get(ENDPOINTS.deputies, { params });
   }
 
   getParties(year: number): Promise<APIResponse> {
-    return this.request.get('/api/deputados/partidos', { params: { ano: year } });
+    return this.request.get(ENDPOINTS.parties, { params: { ano: year } });
   }
 
   getDeputyVotes(deputyId: number, { year, page = 0 }: PageQuery): Promise<APIResponse> {
-    return this.request.get(`/api/deputados/${deputyId}/votacoes`, { params: { ano: year, pagina: page } });
+    return this.request.get(ENDPOINTS.deputyVotes(deputyId), { params: { ano: year, pagina: page } });
   }
 
   async votesJson(query: PageQuery): Promise<Page<Vote>> {
