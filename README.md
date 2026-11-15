@@ -16,6 +16,7 @@ Test automation portfolio for [VotoRadar](https://votoradar.y4tress.com), a port
 | End-to-end UI tests (Page Object Model) | [tests/e2e/](tests/e2e/), [tests/pages/](tests/pages/) |
 | API tests (schema + functional) | [tests/api/](tests/api/) |
 | Environment configuration | [config/environment.ts](config/environment.ts) |
+| API endpoint paths (single source of truth) | [config/endpoints.ts](config/endpoints.ts) |
 
 ## Getting started
 

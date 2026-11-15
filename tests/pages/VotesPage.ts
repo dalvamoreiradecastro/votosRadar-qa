@@ -1,4 +1,5 @@
 import type { Locator, Page, Response } from '@playwright/test';
+import { ENDPOINTS, isEndpoint } from '../../config/endpoints';
 import { BasePage } from './BasePage';
 
 export interface VoteCard {
@@ -11,7 +12,15 @@ export interface VoteCard {
   abstentions: number;
 }
 
-const VOTES_API = /\/api\/votacoes\?/;
+/**
+ * True for the first-page response of the votes list, optionally for a given year.
+ * Later pages come from lazy loading while scrolling and must not be confused with it.
+ */
+function isFirstVotesPage(res: Response, year?: number): boolean {
+  if (!isEndpoint(res.url(), ENDPOINTS.votes)) return false;
+  const params = new URL(res.url()).searchParams;
+  return params.get('pagina') === '0' && (year === undefined || params.get('ano') === String(year));
+}
 
 /** "Explorador de Votações" screen. */
 export class VotesPage extends BasePage {
@@ -29,7 +38,7 @@ export class VotesPage extends BasePage {
   /** Opens the home page and returns the initial (first page) votes API response. */
   async goto(): Promise<Response> {
     return this.actAndWaitForResponse(
-      (res) => VOTES_API.test(res.url()) && res.url().includes('pagina=0'),
+      (res) => isFirstVotesPage(res),
       () => this.page.goto('/'),
     );
   }
@@ -41,7 +50,7 @@ export class VotesPage extends BasePage {
   /** Selects a year and returns the votes API response for it. */
   async selectYear(year: number): Promise<Response> {
     return this.actAndWaitForResponse(
-      (res) => VOTES_API.test(res.url()) && res.url().includes(`ano=${year}`) && res.url().includes('pagina=0'),
+      (res) => isFirstVotesPage(res, year),
       () => this.yearButton(year).click(),
     );
   }
