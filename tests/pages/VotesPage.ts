@@ -1,4 +1,5 @@
 import type { Locator, Page, Response } from '@playwright/test';
+import { BasePage } from './BasePage';
 
 export interface VoteCard {
   date: string;
@@ -10,39 +11,27 @@ export interface VoteCard {
   abstentions: number;
 }
 
-export interface Counter {
-  loaded: number;
-  total: number;
-}
-
 const VOTES_API = /\/api\/votacoes\?/;
 
-/**
- * "Explorador de Votações" screen.
- * All locators are scoped to the screen root because hidden screens stay in the DOM.
- */
-export class VotesPage {
-  readonly screen: Locator;
+/** "Explorador de Votações" screen. */
+export class VotesPage extends BasePage {
   readonly list: Locator;
   readonly cards: Locator;
-  readonly counter: Locator;
   readonly detailsPanel: Locator;
 
-  constructor(private readonly page: Page) {
-    this.screen = page.getByTestId('votacoes-screen');
+  constructor(page: Page) {
+    super(page, 'votacoes-screen', 'Votações');
     this.list = this.screen.getByTestId('votacoes-list');
     this.cards = this.list.getByTestId(/^votacao-\d/);
-    this.counter = this.screen.getByText(/^Votações \(\d+ de \d+\)$/);
     this.detailsPanel = this.screen.getByTestId('votacao-details-panel');
   }
 
   /** Opens the home page and returns the initial (first page) votes API response. */
   async goto(): Promise<Response> {
-    const [response] = await Promise.all([
-      this.page.waitForResponse((res) => VOTES_API.test(res.url()) && res.url().includes('pagina=0')),
-      this.page.goto('/'),
-    ]);
-    return response;
+    return this.actAndWaitForResponse(
+      (res) => VOTES_API.test(res.url()) && res.url().includes('pagina=0'),
+      () => this.page.goto('/'),
+    );
   }
 
   yearButton(year: number): Locator {
@@ -51,13 +40,10 @@ export class VotesPage {
 
   /** Selects a year and returns the votes API response for it. */
   async selectYear(year: number): Promise<Response> {
-    const [response] = await Promise.all([
-      this.page.waitForResponse(
-        (res) => VOTES_API.test(res.url()) && res.url().includes(`ano=${year}`) && res.url().includes('pagina=0'),
-      ),
-      this.yearButton(year).click(),
-    ]);
-    return response;
+    return this.actAndWaitForResponse(
+      (res) => VOTES_API.test(res.url()) && res.url().includes(`ano=${year}`) && res.url().includes('pagina=0'),
+      () => this.yearButton(year).click(),
+    );
   }
 
   /** Selects the year only if the list is not already showing it. */
@@ -103,12 +89,6 @@ export class VotesPage {
       }
     }
     return groups;
-  }
-
-  async readCounter(): Promise<Counter> {
-    const text = await this.counter.innerText();
-    const [, loaded, total] = text.match(/\((\d+) de (\d+)\)/) ?? [];
-    return { loaded: Number(loaded), total: Number(total) };
   }
 
   async readCard(card: Locator): Promise<VoteCard> {
