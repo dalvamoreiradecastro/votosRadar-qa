@@ -2,6 +2,9 @@
 
 Manual test cases for VotoRadar, derived from the [test plan](../test-plan.md).
 
+> 📋 **All 34 cases in a single list**, with priority, risk and the automated test that covers each one:
+> [traceability-matrix.md](traceability-matrix.md)
+
 ## Files
 
 | File | Area | ID prefix |
