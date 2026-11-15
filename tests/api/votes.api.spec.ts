@@ -1,8 +1,7 @@
 import { test, expect } from '../fixtures/api';
 import { VotesPageSchema, contractViolations, type Vote } from './support/schemas';
 
-const CURRENT_YEAR = new Date().getFullYear();
-const PAST_YEAR = 2025;
+import { CURRENT_YEAR, PREVIOUS_YEAR } from '../support/years';
 
 /** Mismatches between `totais` and the deputy lists of each vote. */
 function totalsMismatches(votes: Vote[]): string[] {
@@ -29,16 +28,16 @@ test.describe('Votes API', () => {
   });
 
   test('TC-API-002 vote totals match the lists of deputies', async ({ api }) => {
-    const votes = await api.allVotes(PAST_YEAR);
+    const votes = await api.allVotes(PREVIOUS_YEAR);
 
     expect(votes.length).toBeGreaterThan(0);
     expect(totalsMismatches(votes)).toEqual([]);
   });
 
   test('TC-API-003 votes are filtered by the requested year', async ({ api }) => {
-    const votes = await api.allVotes(PAST_YEAR);
+    const votes = await api.allVotes(PREVIOUS_YEAR);
 
-    const wrongYear = votes.filter((v) => v.anoVotacao !== PAST_YEAR || !v.data.startsWith(`${PAST_YEAR}-`));
+    const wrongYear = votes.filter((v) => v.anoVotacao !== PREVIOUS_YEAR || !v.data.startsWith(`${PREVIOUS_YEAR}-`));
     expect(wrongYear.map((v) => `${v.id} (${v.data})`)).toEqual([]);
   });
 

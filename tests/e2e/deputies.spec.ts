@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures/pages';
 import { env } from '../../config/environment';
 
-const CURRENT_YEAR = new Date().getFullYear();
+import { CURRENT_YEAR } from '../support/years';
 
 // Test data: a deputy in office during the current legislature
 const DEPUTY = { name: 'Erika Hilton', party: 'PSOL', state: 'SP' };
