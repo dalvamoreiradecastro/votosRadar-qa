@@ -1,5 +1,5 @@
 import type { Locator, Page, Response } from '@playwright/test';
-import type { Counter } from './VotesPage';
+import { BasePage } from './BasePage';
 
 export type VoteOption = 'all' | 'aFavor' | 'contra' | 'abstencoes' | 'nenhum';
 
@@ -11,24 +11,19 @@ export interface DeputyItem {
 
 const DEPUTIES_API = /\/api\/deputados\?/;
 
-/**
- * "Explorador de Deputados" screen.
- * All locators are scoped to the screen root because hidden screens stay in the DOM.
- */
-export class DeputiesPage {
-  readonly screen: Locator;
+/** "Explorador de Deputados" screen. */
+export class DeputiesPage extends BasePage {
   readonly nameFilter: Locator;
   readonly partyFilter: Locator;
   readonly stateFilter: Locator;
   readonly list: Locator;
   readonly items: Locator;
-  readonly counter: Locator;
   readonly votesPanel: Locator;
   readonly votesList: Locator;
   readonly voteItems: Locator;
 
-  constructor(private readonly page: Page) {
-    this.screen = page.getByTestId('deputados-screen');
+  constructor(page: Page) {
+    super(page, 'deputados-screen', 'Deputados');
     // On mobile, expanding the filters renders a second copy of the panel in a floating overlay,
     // which comes first in the DOM, while the original copy stays rendered behind the list.
     // `.first()` therefore targets the panel the user actually sees, on desktop and on mobile.
@@ -39,7 +34,6 @@ export class DeputiesPage {
     this.stateFilter = filters.getByTestId('deputados-filter-state');
     this.list = this.screen.getByTestId('deputados-list');
     this.items = this.list.getByTestId(/^deputado-\d+$/);
-    this.counter = this.screen.getByText(/^Deputados \(\d+ de \d+\)$/);
     this.votesPanel = this.screen.getByTestId('deputado-votes-panel');
     this.votesList = this.votesPanel.getByTestId('deputado-votes-list');
     // Anchored to the vote id ("2635476-36"): child buttons share the prefix
@@ -58,8 +52,7 @@ export class DeputiesPage {
       const params = new URL(res.url()).searchParams;
       return params.get('pagina') === '0' && params.get(param) === value;
     };
-    const [response] = await Promise.all([this.page.waitForResponse(isExpected), action()]);
-    return response;
+    return this.actAndWaitForResponse(isExpected, action);
   }
 
   /**
@@ -96,12 +89,6 @@ export class DeputiesPage {
     return this.waitForList('uf', state === 'Todos' ? null : state, async () => {
       await this.stateFilter.selectOption(state);
     });
-  }
-
-  async readCounter(): Promise<Counter> {
-    const text = await this.counter.innerText();
-    const [, loaded, total] = text.match(/\((\d+) de (\d+)\)/) ?? [];
-    return { loaded: Number(loaded), total: Number(total) };
   }
 
   async readAllItems(): Promise<DeputyItem[]> {
