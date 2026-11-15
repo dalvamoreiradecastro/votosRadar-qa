@@ -68,16 +68,20 @@ export class VotesPage extends BasePage {
     return this.list.getByTestId(`votacao-${id}`);
   }
 
-  /** Scrolls the lazily loaded list until the given card is loaded (or no more pages load). */
+  /**
+   * Scrolls the lazily loaded list until the given card is loaded.
+   * Stops when the counter shows the whole list is loaded ("300 de 300"), so the end of the
+   * list is detected immediately instead of by waiting for a timeout. If a page is expected
+   * but never arrives, the wait fails with a clear error instead of being silently ignored.
+   */
   async loadUntilVisible(card: Locator, maxPages = 20): Promise<void> {
     for (let page = 0; page < maxPages && !(await card.isVisible()); page++) {
       const loaded = await this.cards.count();
+      const { total } = await this.readCounter();
+      if (loaded >= total) return; // whole list loaded: the card is not in it
+
       await this.cards.last().scrollIntoViewIfNeeded();
-      try {
-        await this.cards.nth(loaded).waitFor({ timeout: 5_000 });
-      } catch {
-        return; // no more pages
-      }
+      await this.cards.nth(loaded).waitFor(); // next page; fails loudly if it never loads
     }
   }
 
