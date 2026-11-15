@@ -1,7 +1,7 @@
 import { test, expect } from '../fixtures/pages';
 import type { VoteCard } from '../pages/VotesPage';
 
-const CURRENT_YEAR = new Date().getFullYear();
+import { CURRENT_YEAR, FIRST_YEAR, PREVIOUS_YEAR } from '../support/years';
 
 /** Extracts the "Sim"/"Não" counts from a vote description, if present. */
 function parseSummary(description: string): { yes: number; no: number } | null {
@@ -29,7 +29,7 @@ test.describe('Votes explorer', () => {
     const response = await votesPage.goto();
 
     expect(response.url()).toContain(`ano=${CURRENT_YEAR}`);
-    await expect(votesPage.yearButton(2016)).toBeVisible();
+    await expect(votesPage.yearButton(FIRST_YEAR)).toBeVisible();
     await expect(votesPage.yearButton(CURRENT_YEAR)).toBeVisible();
     await expect(votesPage.cards.first()).toBeVisible();
 
@@ -41,14 +41,14 @@ test.describe('Votes explorer', () => {
   test('TC-VOT-002 selecting a year lists only votes from that year', async ({ votesPage }) => {
     await votesPage.goto();
 
-    const response = await votesPage.selectYear(2025);
+    const response = await votesPage.selectYear(PREVIOUS_YEAR);
     const body = await response.json();
 
     await expect(votesPage.counter).toContainText(`de ${body.totalItens})`);
     const cards = await votesPage.readAllCards();
     expect(cards.length).toBeGreaterThan(0);
     for (const card of cards) {
-      expect(card.date, `vote ${card.id}`).toMatch(/^2025-/);
+      expect(card.date, `vote ${card.id}`).toMatch(new RegExp(`^${PREVIOUS_YEAR}-`));
     }
   });
 
